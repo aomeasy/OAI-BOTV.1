@@ -1,16 +1,14 @@
 """
 OAI_BOT_V.1 - AI Document Analyzer
 Power by NT AI ONE
-
 Main Flask Application
 """
-
 import os
 import logging
+import uuid  # Built-in module - ลบออกจาก requirements.txt
+from datetime import datetime  # Built-in module - ลบออกจาก requirements.txt
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_cors import CORS
-from datetime import datetime
-import uuid
 
 # Import services
 from config.settings import Settings
@@ -102,6 +100,7 @@ def internal_error(error):
     logger.error(f"Internal server error: {error}")
     return jsonify({'error': 'Internal Server Error'}), 500
 
+# แก้ไข syntax error
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'
