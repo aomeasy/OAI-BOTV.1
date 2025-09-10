@@ -388,4 +388,17 @@ def test_line_token(token):
         if response.status_code == 200:
             return {
                 "valid": True,
-                "
+                "message": "Line notification sent successfully"
+            }
+        else:
+            return {
+                "valid": False,
+                "message": f"Line API error: {response.status_code} - {response.text}"
+            }
+            
+    except Exception as e:
+        logger.error(f"Error testing Line token: {str(e)}")
+        return {
+            "valid": False,
+            "message": f"Connection error: {str(e)}"
+        }
