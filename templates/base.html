@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OAI_BOT_V.1 - Power by NT AI ONE{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>OAI_BOT_V.1</h1>
+                    <span>Power by NT AI ONE</span>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <div class="nav-menu">
+                <a href="/" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>หน้าหลัก</span>
+                </a>
+                <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>แดชบอร์ด</span>
+                </a>
+                <a href="/documents" class="nav-link {% if request.endpoint == 'documents' %}active{% endif %}">
+                    <i class="fas fa-file-alt"></i>
+                    <span>เอกสาร</span>
+                </a>
+                <a href="/chat" class="nav-link {% if request.endpoint == 'chat' %}active{% endif %}">
+                    <i class="fas fa-comments"></i>
+                    <span>แชท</span>
+                </a>
+                <a href="/settings" class="nav-link {% if request.endpoint == 'settings_page' %}active{% endif %}">
+                    <i class="fas fa-cog"></i>
+                    <span>ตั้งค่า</span>
+                </a>
+                <a href="/admin" class="nav-link {% if request.endpoint == 'admin' %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>ผู้ดูแล</span>
+                </a>
+            </div>
+            
+            <!-- Status Indicator -->
+            <div class="nav-status">
+                <div class="status-indicator" id="systemStatus">
+                    <div class="status-dot"></div>
+                    <span>ระบบพร้อมใช้งาน</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <p>&copy; 2025 OAI_BOT_V.1 - Power by NT AI ONE</p>
+                <p>สำหรับ บลนป. (บริษัทลิสซิ่งนครหลวง จำกัด)</p>
+            </div>
+            <div class="footer-right">
+                <div class="footer-links">
+                    <a href="/health" target="_blank">สถานะระบบ</a>
+                    <a href="#" onclick="showHelp()">ช่วยเหลือ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>กำลังประมวลผล...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Initialize system status
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemStatus();
+            setInterval(checkSystemStatus, 30000); // Check every 30 seconds
+        });
+        
+        // System status check
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                const statusElement = document.getElementById('systemStatus');
+                
+                if (data.status === 'healthy') {
+                    statusElement.className = 'status-indicator healthy';
+                    statusElement.querySelector('span').textContent = 'ระบบพร้อมใช้งาน';
+                } else {
+                    statusElement.className = 'status-indicator warning';
+                    statusElement.querySelector('span').textContent = 'ระบบมีปัญหา';
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('systemStatus');
+                statusElement.className = 'status-indicator error';
+                statusElement.querySelector('span').textContent = 'ไม่สามารถเชื่อมต่อได้';
+            }
+        }
+        
+        // Help function
+        function showHelp() {
+            showNotification('กรุณาไปที่หน้า "ผู้ดูแล" เพื่อขอความช่วยเหลือจาก Admin Chatbot', 'info');
+        }
+    </script>
+</body>
+</html>
