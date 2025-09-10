@@ -151,4 +151,6 @@ async def search_documents():
         
         return jsonify(search_result)
         
-    except Exception as e:
+except Exception as e:
+    print(f"Error: {e}")  # หรือ code อื่นๆ
+    return jsonify({'error': str(e)}), 500
